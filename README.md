@@ -1,7 +1,8 @@
 # OBS Source Service `obs-service-go_modules`
 
-An OBS Source Service to download, verify and vendor Go module 
-dependency sources.
+An [OBS](https://build.opensuse.org)
+[Source Service](https://openbuildservice.org/help/manuals/obs-user-guide/cha.obs.source_service.html)
+to download, verify and vendor Go module dependency sources.
 
 Using go.mod and go.sum present in a Go application, call
 go tools in sequence:
@@ -21,7 +22,7 @@ is generated in the rpm package directory.
 Presently it is assumed the Go application is distributed as
 a tarball `app-0.1.0.tar.gz` unpacking to `app-0.1.0/`
 
-Create a _services file containing:
+Create a `_services` file containing:
 
 ```
 <services>
@@ -39,10 +40,10 @@ osc service disabledrun
 
 ## Transition note
 
-Until such time as obs-service-go_modules is available on
-OBS, `vendor.tar.gz should be committed along with the
-Go application release tarball.
+Until such time as `obs-service-go_modules` is available on
+[OBS](https://build.opensuse.org), `vendor.tar.gz` should
+be committed along with the Go application release tarball.
 
 ## License
 
-GPL-2.0-or-later GNU General Public License v2.0 or later
+GNU General Public License v2.0 or later
