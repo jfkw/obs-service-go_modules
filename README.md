@@ -42,3 +42,7 @@ osc service disabledrun
 Until such time as obs-service-go_modules is available on
 OBS, `vendor.tar.gz should be committed along with the
 Go application release tarball.
+
+## License
+
+GPL-2.0-or-later GNU General Public License v2.0 or later
