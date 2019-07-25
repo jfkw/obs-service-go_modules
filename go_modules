@@ -1,0 +1,149 @@
+#!/usr/bin/env python3
+#
+# An OBS Source Service to retrieve and verify Go module sources
+# as specified in go.mod and go.sum.
+#
+# (C) 2019 SUSE LLC
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# See http://www.gnu.org/licenses/gpl-2.0.html for full license text.
+#
+"""\
+# OBS Source Service `obs-service-go_modules`
+
+An OBS Source Service to download, verify and vendor Go module 
+dependency sources.
+
+Using go.mod and go.sum present in a Go application, call
+go tools in sequence:
+
+```
+go mod download
+go mod verify
+go mod vendor
+```
+
+`obs-service-go_modules` will create `vendor.tar.gz` containing the
+`vendor/` directory populated by `go mod vendor`. `vendor.tar.gz`
+is generated in the rpm package directory.
+
+## Usage for packagers
+
+Presently it is assumed the Go application is distributed as
+a tarball `app-0.1.0.tar.gz` unpacking to `app-0.1.0/`
+
+Create a _services file containing:
+
+```
+<services>
+  <service name="go_modules" mode="disabled">
+    <param name="archive">app-0.1.0.tar.gz</param>
+  </service>
+</services>
+```
+
+Run osc command locally:
+
+```
+osc service disabledrun
+```
+
+## Transition note
+
+Until such time as obs-service-go_modules is available on
+OBS, `vendor.tar.gz should be committed along with the
+Go application release tarball.
+"""
+
+import argparse
+import tarfile
+import os
+import errno
+import shutil
+
+from subprocess import check_output
+from subprocess import CalledProcessError
+
+app_name = "obs-service-go_modules"
+log_prefix = f"{app_name}:"
+vendor_tarname = "vendor.tar.gz"
+
+description = __doc__
+
+parser = argparse.ArgumentParser(description=description, formatter_class=argparse.RawDescriptionHelpFormatter)
+parser.add_argument("--strategy", default="vendor")
+parser.add_argument("--archive")
+parser.add_argument("--outdir")
+args = parser.parse_args()
+
+
+outdir = args.outdir
+archive = args.archive
+basename = archive.replace(".tar.gz", "")  # currently only .tar.gz supported
+
+
+def extract(src, dst):
+    if src.endswith(".tar.gz"):
+        tar = tarfile.open(src)
+        tar.extractall(path=outdir)
+        tar.close()
+    else:
+        print(f"{log_prefix} Unsupported archive file format for {src}")
+        exit
+
+
+def find_file(path, filename):
+    for root, dirs, files in os.walk(path):
+        if filename in files:
+            return os.path.join(root, filename)
+
+
+def cmd_go_mod(cmd, dir):
+    try:
+        print(f"{log_prefix} go mod {cmd}")
+        output = check_output(["go", "mod", cmd], cwd=dir).decode("utf-8").strip()
+        if output:
+            print(output)
+            return True
+    except CalledProcessError as e:
+        error = e.output.decode("utf-8").strip()
+        if error:
+            print(error)
+            return False
+
+
+def main():
+    print(f"{log_prefix} Running OBS Source Service: {app_name}")
+
+    print(f"{log_prefix} Extracting {archive} to {outdir}")
+    extract(archive, outdir)
+
+    go_mod_path = find_file(outdir, "go.mod")
+    if go_mod_path:
+        go_mod_dir = os.path.dirname(go_mod_path)
+        print(f"{log_prefix} Using go.mod found at {go_mod_path}")
+    else:
+        print(f"{log_prefix} File go.mod not found under {outdir}")
+        exit()
+
+    if args.strategy == "vendor":
+
+        cmd_go_mod("download", go_mod_dir)
+        cmd_go_mod("verify", go_mod_dir)
+        cmd_go_mod("vendor", go_mod_dir)
+
+        print(f"{log_prefix} Vendor go.mod dependencies to {vendor_tarname}")
+        vendor_tarfile = os.path.join(outdir, vendor_tarname)
+        vendor_dir = os.path.join(go_mod_dir, "vendor")
+        with tarfile.open(vendor_tarfile, "w:gz") as tar:
+            tar.add(vendor_dir, arcname=("vendor"))
+
+        # remove extracted Go application source
+        shutil.rmtree(os.path.join(outdir, basename))
+
+
+if __name__ == "__main__":
+    main()
