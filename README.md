@@ -95,7 +95,7 @@ all modules verified
 obs-service-go_modules: go mod vendor
 obs-service-go_modules: Vendor go.mod dependencies to vendor.tar.gz
 
-$ ls
+$ ls -1
 hugo-0.56.0.tar.gz
 hugo.changes
 hugo.spec
