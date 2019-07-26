@@ -17,7 +17,7 @@ go mod vendor
 `vendor/` directory populated by `go mod vendor`. `vendor.tar.gz`
 is generated in the rpm package directory. `vendor.tar.gz` can be
 committed to [OBS](https://build.opensuse.org) to facilitate
-fully-offline Go application package builds for
+offline Go application package builds for
 [openSUSE](https://www.opensuse.org),
 [SUSE](https://www.suse.com) and numerous other distributions.
 
