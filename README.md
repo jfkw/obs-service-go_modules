@@ -26,7 +26,7 @@ offline Go application package builds for
 Presently it is assumed the Go application is distributed as
 a tarball `app-0.1.0.tar.gz` unpacking to `app-0.1.0/`
 
-Create a `_services` file containing:
+Create a `_service` file containing:
 
 ```
 <services>
