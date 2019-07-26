@@ -72,7 +72,9 @@ vendor_tarname = "vendor.tar.gz"
 
 description = __doc__
 
-parser = argparse.ArgumentParser(description=description, formatter_class=argparse.RawDescriptionHelpFormatter)
+parser = argparse.ArgumentParser(
+    description=description, formatter_class=argparse.RawDescriptionHelpFormatter
+)
 parser.add_argument("--strategy", default="vendor")
 parser.add_argument("--archive")
 parser.add_argument("--outdir")
@@ -84,13 +86,13 @@ archive = args.archive
 basename = archive.replace(".tar.gz", "")  # currently only .tar.gz supported
 
 
-def extract(src, dst):
-    if src.endswith(".tar.gz"):
-        tar = tarfile.open(src)
-        tar.extractall(path=outdir)
+def extract(filename, dir):
+    if filename.endswith(".tar.gz"):
+        tar = tarfile.open(filename)
+        tar.extractall(path=dir)
         tar.close()
     else:
-        print(f"{log_prefix} Unsupported archive file format for {src}")
+        print(f"{log_prefix} Unsupported archive file format for {filename}")
         exit
 
 
