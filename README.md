@@ -1,11 +1,11 @@
 # OBS Source Service `obs-service-go_modules`
 
-An [OBS](https://build.opensuse.org)
+An [Open Build Service (OBS)](https://build.opensuse.org)
 [Source Service](https://openbuildservice.org/help/manuals/obs-user-guide/cha.obs.source_service.html)
 to download, verify and vendor Go module dependency sources.
 
-Using go.mod and go.sum present in a Go application, call
-go tools in sequence:
+Using go.mod and go.sum present in a Go application,
+`obs-service-go_modules` will call Go tools in sequence:
 
 ```
 go mod download
@@ -15,7 +15,11 @@ go mod vendor
 
 `obs-service-go_modules` will create `vendor.tar.gz` containing the
 `vendor/` directory populated by `go mod vendor`. `vendor.tar.gz`
-is generated in the rpm package directory.
+is generated in the rpm package directory. `vendor.tar.gz` can be
+committed to [OBS](https://build.opensuse.org) to facilitate
+fully-offline Go application package builds for
+[openSUSE](https://www.opensuse.org),
+[SUSE](https://www.suse.com) and numerous other distributions.
 
 ## Usage for packagers
 
