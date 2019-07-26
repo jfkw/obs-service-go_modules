@@ -61,7 +61,6 @@ Go application release tarball.
 import argparse
 import tarfile
 import os
-import errno
 import shutil
 
 from subprocess import check_output
