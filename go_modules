@@ -93,7 +93,7 @@ def extract(filename, dir):
         tar.close()
     else:
         print(f"{log_prefix} Unsupported archive file format for {filename}")
-        exit
+        exit(1)
 
 
 def find_file(path, filename):
@@ -128,7 +128,7 @@ def main():
         print(f"{log_prefix} Using go.mod found at {go_mod_path}")
     else:
         print(f"{log_prefix} File go.mod not found under {outdir}")
-        exit()
+        exit(1)
 
     if args.strategy == "vendor":
 
