@@ -58,6 +58,7 @@ OBS, `vendor.tar.gz should be committed along with the
 Go application release tarball.
 """
 
+import logging
 import argparse
 import tarfile
 import os
@@ -67,10 +68,12 @@ from subprocess import check_output
 from subprocess import CalledProcessError
 
 app_name = "obs-service-go_modules"
-log_prefix = f"{app_name}:"
 vendor_tarname = "vendor.tar.gz"
 
 description = __doc__
+
+logging.basicConfig(level=logging.DEBUG)
+log = logging.getLogger(app_name)
 
 parser = argparse.ArgumentParser(
     description=description, formatter_class=argparse.RawDescriptionHelpFormatter
@@ -92,7 +95,7 @@ def extract(filename, dir):
         tar.extractall(path=dir)
         tar.close()
     else:
-        print(f"{log_prefix} Unsupported archive file format for {filename}")
+        log.info(f"Unsupported archive file format for {filename}")
         exit(1)
 
 
@@ -104,30 +107,30 @@ def find_file(path, filename):
 
 def cmd_go_mod(cmd, dir):
     try:
-        print(f"{log_prefix} go mod {cmd}")
+        log.info(f"go mod {cmd}")
         output = check_output(["go", "mod", cmd], cwd=dir).decode("utf-8").strip()
         if output:
-            print(output)
+            log.info(output)
         return True
     except CalledProcessError as e:
         error = e.output.decode("utf-8").strip()
         if error:
-            print(error)
+            log.info(error)
         return False
 
 
 def main():
-    print(f"{log_prefix} Running OBS Source Service: {app_name}")
+    log.info(f"Running OBS Source Service: {app_name}")
 
-    print(f"{log_prefix} Extracting {archive} to {outdir}")
+    log.info(f"Extracting {archive} to {outdir}")
     extract(archive, outdir)
 
     go_mod_path = find_file(outdir, "go.mod")
     if go_mod_path:
         go_mod_dir = os.path.dirname(go_mod_path)
-        print(f"{log_prefix} Using go.mod found at {go_mod_path}")
+        log.info(f"Using go.mod found at {go_mod_path}")
     else:
-        print(f"{log_prefix} File go.mod not found under {outdir}")
+        log.info(f"File go.mod not found under {outdir}")
         exit(1)
 
     if args.strategy == "vendor":
@@ -136,7 +139,7 @@ def main():
         cmd_go_mod("verify", go_mod_dir)
         cmd_go_mod("vendor", go_mod_dir)
 
-        print(f"{log_prefix} Vendor go.mod dependencies to {vendor_tarname}")
+        log.info(f"Vendor go.mod dependencies to {vendor_tarname}")
         vendor_tarfile = os.path.join(outdir, vendor_tarname)
         vendor_dir = os.path.join(go_mod_dir, "vendor")
         with tarfile.open(vendor_tarfile, "w:gz") as tar:
