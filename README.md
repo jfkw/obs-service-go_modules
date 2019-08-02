@@ -117,6 +117,37 @@ Until such time as `obs-service-go_modules` is available on
 [OBS](https://build.opensuse.org), `vendor.tar.gz` should
 be committed along with the Go application release tarball.
 
+## FAQ
+
+### Q: Does `vendor.tar.gz` need to be committed to OBS package?
+
+A: Currently yes.
+As long as  `obs-service-go_modules` is run locally via `osc service disabledrun`,
+then `vendor.tar.gz` should be committed and referenced as an additional `Source:`.
+If and when `obs-service-go_modules` is available on
+[OBS](https://build.opensuse.org),
+additional strategies should be possible such as a `vendor.cpio`
+where the vendored dependencies are managed on the fly
+and will not need to be committed to OBS package revisions.
+The single source of truth `go.mod` and `go.sum` always remain with the application source code.
+
+### Q: Does `obs-service-go_modules` update dependencies to newer versions?
+
+A: No. Go modules use
+[Minimum Version Selection](https://github.com/golang/go/wiki/Modules#faqs--minimal-version-selection),
+so the minimum (oldest) version of a Go module that satisfes all `go.mod` entries in the transitive dependency set.
+Go modules are relatively new and real-world use remains to be seen,
+but the expectation is that dependency verions will increment at a measured pace
+driven by upstream projects making releases with a well-tested dependency set.
+It is a design goal that there should be no surprise updates pulled in,
+and the dependency set selected remains repeatable over time.
+
+### Q: Does `obs-service-go_modules` cache Go module downloads to save time and server resources?
+
+A: No. Running a Go proxy inside OBS could accomplish this,
+as well as provide protections against third-party service outages and
+upstream Go modules being removed by the author.
+
 ## License
 
 GNU General Public License v2.0 or later
