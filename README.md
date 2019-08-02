@@ -135,12 +135,13 @@ The single source of truth `go.mod` and `go.sum` always remain with the applicat
 
 A: No. Go modules use
 [Minimum Version Selection](https://github.com/golang/go/wiki/Modules#faqs--minimal-version-selection),
-so the minimum (oldest) version of a Go module that satisfes all `go.mod` entries in the transitive dependency set.
+selecting the minimum (oldest) version of a Go module that satisfes all `go.mod` entries in the transitive dependency set.
 Go modules are relatively new and real-world use remains to be seen,
 but the expectation is that dependency verions will increment at a measured pace
 driven by upstream projects making releases with a well-tested dependency set.
 It is a design goal that there should be no surprise updates pulled in,
 and the dependency set selected remains repeatable over time.
+These characteristics should be quite favorable for distribution packagers.
 
 ### Q: Does `obs-service-go_modules` cache Go module downloads to save time and server resources?
 
