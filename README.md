@@ -145,7 +145,7 @@ These characteristics should be quite favorable for distribution packagers.
 
 ### Q: Does `obs-service-go_modules` cache Go module downloads to save time and server resources?
 
-A: No. Running a Go proxy inside OBS could accomplish this,
+A: No. Running a private [Go proxy](https://proxy.golang.org) inside OBS could accomplish this,
 as well as provide protections against third-party service outages and
 upstream Go modules being removed by the author.
 
