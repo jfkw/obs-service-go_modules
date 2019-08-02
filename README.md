@@ -1,6 +1,8 @@
 # OBS Source Service `obs-service-go_modules`
 
-An [Open Build Service (OBS)](https://build.opensuse.org)
+This is the git repository for
+[`devel:languages:go/obs-service-go_modules`](https://build.opensuse.org/package/show/devel:languages:go/obs-service-go_modules),
+an [Open Build Service (OBS)](https://build.opensuse.org)
 [Source Service](https://openbuildservice.org/help/manuals/obs-user-guide/cha.obs.source_service.html)
 to download, verify and vendor Go module dependency sources.
 
