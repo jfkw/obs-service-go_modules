@@ -5,6 +5,7 @@ This is the git repository for
 an [Open Build Service (OBS)](https://build.opensuse.org)
 [Source Service](https://openbuildservice.org/help/manuals/obs-user-guide/cha.obs.source_service.html)
 to download, verify and vendor Go module dependency sources.
+The authoritative source is https://github.com/openSUSE/obs-service-go_modules.
 
 Using
 [`go.mod` and `go.sum`](https://github.com/golang/go/wiki/Modules)
