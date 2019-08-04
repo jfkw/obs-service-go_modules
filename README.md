@@ -47,6 +47,19 @@ Run osc command locally:
 osc service disabledrun
 ```
 
+## Building Go Applications with Vendored Dependency Modules
+
+Go commands support building with vendored dependencies,
+but it is no longer on by default.
+Upstream has stated vendoring is not going away.
+To ensure the top-level `vendor/` directory is used by go build,
+pass the argument `go build -mod=vendor` to each invocation,
+or set environment variable `GOFLAGS=-mod=vendor` to apply the setting to all invocations.
+More information about additional controls is available at:
+[Go Module Knobs](https://github.com/thepudds/go-module-knobs/blob/master/README.md),
+[Go Wiki: Modules: How do I use vendoring](https://github.com/golang/go/wiki/Modules#how-do-i-use-vendoring-with-modules-is-vendoring-going-away) and
+[Go Wiki: Modules: Old vs. new behavior](https://github.com/golang/go/wiki/Modules#when-do-i-get-old-behavior-vs-new-module-based-behavior)
+
 ## Example
 
 Using the [hugo](https://github.com/gohugoio) static site generator as
@@ -138,7 +151,7 @@ A: No. Go modules use
 [Minimum Version Selection](https://github.com/golang/go/wiki/Modules#faqs--minimal-version-selection),
 selecting the minimum (oldest) version of a Go module that satisfes all `go.mod` entries in the transitive dependency set.
 Go modules are relatively new and real-world use remains to be seen,
-but the expectation is that dependency verions will increment at a measured pace
+but the expectation is that dependency versions will increment at a measured pace
 driven by upstream projects making releases with a well-tested dependency set.
 It is a design goal that there should be no surprise updates pulled in,
 and the dependency set selected remains repeatable over time.
