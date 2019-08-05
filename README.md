@@ -52,9 +52,12 @@ osc service disabledrun
 Go commands support building with vendored dependencies,
 but it is no longer on by default.
 Upstream has stated vendoring is not going away.
-To ensure the top-level `vendor/` directory is used by go build,
-pass the argument `go build -mod=vendor` to each invocation,
-or set environment variable `GOFLAGS=-mod=vendor` to apply the setting to all invocations.
+To ensure the top-level `vendor/` directory is used by go build, either:
+
+- pass the argument `go build -mod=vendor` to each invocation
+
+- set environment variable `GOFLAGS=-mod=vendor` to apply the setting to all invocations
+
 More information about additional controls is available at:
 [Go Module Knobs](https://github.com/thepudds/go-module-knobs/blob/master/README.md),
 [Go Wiki: Modules: How do I use vendoring](https://github.com/golang/go/wiki/Modules#how-do-i-use-vendoring-with-modules-is-vendoring-going-away) and
