@@ -47,7 +47,7 @@ Run `osc` command locally:
 osc service disabledrun
 ```
 
-## Building Go Applications with Vendored Dependency Modules
+## Building Go applications with vendored dependency modules
 
 Go commands support building with vendored dependencies,
 but it is no longer on by default.
