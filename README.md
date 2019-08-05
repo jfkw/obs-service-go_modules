@@ -4,7 +4,7 @@ This is the git repository for
 [`devel:languages:go/obs-service-go_modules`](https://build.opensuse.org/package/show/devel:languages:go/obs-service-go_modules),
 an [Open Build Service (OBS)](https://build.opensuse.org)
 [Source Service](https://openbuildservice.org/help/manuals/obs-user-guide/cha.obs.source_service.html)
-to download, verify and vendor Go module dependency sources.
+to download, verify, and vendor Go module dependency sources.
 The authoritative source is https://github.com/openSUSE/obs-service-go_modules.
 
 Using
@@ -24,7 +24,7 @@ is generated in the rpm package directory. `vendor.tar.gz` can be
 committed to [OBS](https://build.opensuse.org) to facilitate
 offline Go application package builds for
 [openSUSE](https://www.opensuse.org),
-[SUSE](https://www.suse.com) and numerous other distributions.
+[SUSE](https://www.suse.com), and numerous other distributions.
 
 ## Usage for packagers
 
@@ -41,7 +41,7 @@ Create a `_service` file containing:
 </services>
 ```
 
-Run osc command locally:
+Run `osc` command locally:
 
 ```
 osc service disabledrun
@@ -149,7 +149,7 @@ The single source of truth `go.mod` and `go.sum` always remain with the applicat
 
 A: No. Go modules use
 [Minimum Version Selection](https://github.com/golang/go/wiki/Modules#faqs--minimal-version-selection),
-selecting the minimum (oldest) version of a Go module that satisfes all `go.mod` entries in the transitive dependency set.
+selecting the minimum (oldest) version of a Go module that satisfies all `go.mod` entries in the transitive dependency set.
 Go modules are relatively new and real-world use remains to be seen,
 but the expectation is that dependency versions will increment at a measured pace
 driven by upstream projects making releases with a well-tested dependency set.
