@@ -134,6 +134,14 @@ Until such time as `obs-service-go_modules` is available on
 [OBS](https://build.opensuse.org), `vendor.tar.gz` should
 be committed along with the Go application release tarball.
 
+## openSUSE RPM packages built using `obs-service-go_modules`
+
+- [hugo](https://build.opensuse.org/package/show/devel:languages:go/hugo)
+- [go-modiff](https://build.opensuse.org/package/show/devel:languages:go/go-modiff)
+- [gohack](https://build.opensuse.org/package/show/devel:languages:go/gohack)
+- [mod](https://build.opensuse.org/package/show/devel:languages:go/mod)
+- [mgit](https://build.opensuse.org/package/show/devel:languages:go/mod)
+
 ## FAQ
 
 ### Q: Does `vendor.tar.gz` need to be committed to OBS package?
