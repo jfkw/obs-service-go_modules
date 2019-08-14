@@ -140,7 +140,7 @@ be committed along with the Go application release tarball.
 - [go-modiff](https://build.opensuse.org/package/show/devel:languages:go/go-modiff)
 - [gohack](https://build.opensuse.org/package/show/devel:languages:go/gohack)
 - [mod](https://build.opensuse.org/package/show/devel:languages:go/mod)
-- [mgit](https://build.opensuse.org/package/show/devel:languages:go/mod)
+- [mgit](https://build.opensuse.org/package/show/devel:languages:go/mgit)
 
 ## FAQ
 
