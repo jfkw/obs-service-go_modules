@@ -114,7 +114,11 @@ def main():
             tar.add(vendor_dir, arcname=("vendor"))
 
         # remove extracted Go application source
-        shutil.rmtree(os.path.join(outdir, basename))
+        try:
+            to_remove = os.path.join(outdir, basename)
+            shutil.rmtree(to_remove)
+        except FileNotFoundError as e:
+            log.error(f"Could not remove directory not found {to_remove}")
 
 
 if __name__ == "__main__":
