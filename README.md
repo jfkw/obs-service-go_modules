@@ -29,23 +29,28 @@ offline Go application package builds for
 ## Usage for packagers
 
 Presently it is assumed the Go application is distributed as
-a tarball `app-0.1.0.tar.gz` unpacking to `app-0.1.0/`
+a tarball `app-0.1.0.tar.gz` unpacking to `app-0.1.0/`.
+`obs-service-go_modules` will autodetect tarball archives of the form `app-0.1.0.tar.gz`,
+where the RPM packaing uses spec file `app.spec`.
 
 Create a `_service` file containing:
 
 ```
 <services>
   <service name="go_modules" mode="disabled">
-    <param name="archive">app-0.1.0.tar.gz</param>
   </service>
 </services>
 ```
+
+The archive name can alternatively be specified using service parameter `archive`.
 
 Run `osc` command locally:
 
 ```
 osc service disabledrun
 ```
+
+See [Examble](#example) below for typical output with a complete `_service` file.
 
 ## Building Go applications with vendored dependency modules
 

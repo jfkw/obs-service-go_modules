@@ -32,6 +32,7 @@ import tarfile
 import os
 import shutil
 
+from pathlib import Path
 from subprocess import check_output
 from subprocess import CalledProcessError
 
@@ -51,9 +52,40 @@ parser.add_argument("--archive")
 parser.add_argument("--outdir")
 args = parser.parse_args()
 
-
 outdir = args.outdir
-archive = args.archive
+
+
+def archive_autodetect():
+    """ Find the most likely candidate file that contains go.mod and go.sum.
+        For most go applications this will be app-x.y.z.tar.gz.
+        Use the name of the .spec file as the stem for the archive to detect.
+        Archive formats supported:
+        - .tar.gz
+    """
+    log.info(f"Autodetecting archive since no archive param provided in _service")
+    cwd = Path.cwd()
+    # first .spec under cwd or None
+    spec = next(reversed(sorted(Path(cwd).glob("*.spec"))), None)
+    if not spec:
+        log.error(f"Archive autodetection found no spec file under {cwd}")
+        exit(1)
+    else:
+        spec_dir = spec.parent  # typically the same as cwd
+        spec_stem = spec.stem  # stem is app in app.spec
+        # highest sorted archive under spec_dir
+        pattern = f"{spec.stem}*.tar.gz"
+        archive = next(reversed(sorted(Path(spec_dir).glob(pattern))), None)
+    if not archive:
+        log.error(f"Archive autodetection found no matching archive under {cwd}")
+        exit(1)
+    else:
+        log.info(f"Archive autodetected at {archive}")
+        return str(archive.name)  # return string not PosixPath
+
+
+archive = args.archive or archive_autodetect()
+log.info(f"Using archive {archive}")
+
 basename = archive.replace(".tar.gz", "")  # currently only .tar.gz supported
 
 
