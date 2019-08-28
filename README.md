@@ -119,6 +119,39 @@ _servicedata
 vendor.tar.gz
 ```
 
+## Example `_service` configuration
+
+OBS Source Services
+[`obs-service-tar_scm`](https://github.com/openSUSE/obs-service-tar_scm),
+[`obs-service-set_version`](https://github.com/openSUSE/obs-service-set_version) and
+[`obs-service-recompress`]()
+can be used together to automate Go application source archive handling and support local development workflows:
+
+```
+<services>
+  <service name="tar_scm" mode="disabled">
+    <param name="url">git://github.com/gohugoio/hugo.git</param>
+    <param name="scm">git</param>
+    <param name="exclude">.git</param>
+    <param name="revision">v0.57.2</param>
+    <param name="versionformat">@PARENT_TAG@</param>
+    <param name="changesgenerate">enable</param>
+    <param name="versionrewrite-pattern">v(.*)</param>
+  </service>
+  <service name="set_version" mode="disabled">
+    <param name="basename">hugo</param>
+  </service>
+  <service name="recompress" mode="disabled">
+    <param name="file">*.tar</param>
+    <param name="compression">gz</param>
+  </service>
+  <service name="go_modules" mode="disabled">
+  </service>
+</services>
+```
+
+Persistent state for changelog generation is stored in `_servicedata`.
+
 ## Transition note
 
 Until such time as `obs-service-go_modules` is available on
