@@ -159,9 +159,17 @@ It is a design goal that there should be no surprise updates pulled in,
 and the dependency set selected remains repeatable over time.
 These characteristics should be quite favorable for distribution packagers.
 
-### Q: Does `obs-service-go_modules` cache Go module downloads to save time and server resources?
+### Q: Does `obs-service-go_modules` cache Go module downloads to save time and bandwidth?
 
-A: No. Running a private [Go proxy](https://proxy.golang.org) inside OBS could accomplish this,
+A: Yes. For local use with `osc service disabledrun`,
+`obs-service-go_modules` uses the standard module cache `~/go/pkg/mod`.
+Subsequent runs of `obs-service-go_modules` with a populated cache will finish in less time.
+
+### Q: Would `obs-service-go_modules` installed on OBS cache Go module downloads to conserve server resources?
+
+A: Not directly.
+The Go module cache `~/go/pkg/mod` would not persist between OBS build runs.
+Running a private [Go proxy](https://proxy.golang.org) inside OBS could accomplish this,
 as well as provide protections against third-party service outages and
 upstream Go modules being removed by the author.
 
