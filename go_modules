@@ -28,6 +28,7 @@ See README.md for additional documentation.
 
 import logging
 import argparse
+import re
 import tarfile
 import os
 import shutil
@@ -80,6 +81,22 @@ def archive_autodetect():
         exit(1)
     else:
         log.info(f"Archive autodetected at {archive}")
+        # Check that app.spec Version: directive value
+        # is a substring of detected archive filename
+        # Warn if there is disagreement between the versions.
+        pattern = re.compile(r"^Version:\s+([\S]+)$", re.IGNORECASE)
+        with spec.open(encoding="utf-8") as f:
+            for line in f:
+                versionmatch = pattern.match(line)
+                if versionmatch:
+                    version = versionmatch.groups(0)[0]
+            if not version:
+                log.warning(f"Version not found in {spec.name}")
+            else:
+                if not (version in archive.name):
+                    log.warning(
+                        f"Version {version} in {spec.name} does not match {archive.name}"
+                    )
         return str(archive.name)  # return string not PosixPath
 
 
