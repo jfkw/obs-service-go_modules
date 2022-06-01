@@ -51,12 +51,12 @@ def get_archive_parameters(args):
     archive_extension = None
 
     if args.compression == "obscpio" and "cpio" in libarchive.ffi.READ_FORMATS:
-        archive_format = 'cpio_newc'
+        archive_format = "cpio_newc"
         archive_compression = None
         archive_extension = args.compression
 
     elif args.compression == "tar" and "tar" in libarchive.ffi.READ_FORMATS:
-        archive_format = 'gnutar'
+        archive_format = "gnutar"
         archive_compression = None
         archive_extension = args.compression
 
@@ -70,10 +70,12 @@ def get_archive_parameters(args):
             compression_format = "zstd"
 
         if compression_format not in libarchive.ffi.READ_FILTERS:
-            log.error(f"The specified compression mode is not supported: \"{args.compression}\"")
+            log.error(
+                f'The specified compression mode is not supported: "{args.compression}"'
+            )
             exit(1)
 
-        archive_format = 'gnutar'
+        archive_format = "gnutar"
         archive_compression = compression_format
         archive_extension = "tar." + (args.compression)
 
@@ -81,15 +83,19 @@ def get_archive_parameters(args):
 
 
 def basename_from_archive_name(archive_name):
-    return re.sub('^(?P<service_prefix>_service:[^:]+:)?(?P<basename>.*)\.(?P<extension>obscpio|tar\.[^\.]+)$', r'\g<basename>', archive_name)
+    return re.sub(
+        "^(?P<service_prefix>_service:[^:]+:)?(?P<basename>.*)\.(?P<extension>obscpio|tar\.[^\.]+)$",
+        r"\g<basename>",
+        archive_name,
+    )
 
 
 def archive_autodetect():
-    """ Find the most likely candidate file that contains go.mod and go.sum.
-        For most Go applications this will be app-x.y.z.tar[.<tar compression>].
-        Use the name of the .spec file as the stem for the archive to detect.
-        Archive formats supported:
-        - .tar.gz
+    """Find the most likely candidate file that contains go.mod and go.sum.
+    For most Go applications this will be app-x.y.z.tar[.<tar compression>].
+    Use the name of the .spec file as the stem for the archive to detect.
+    Archive formats supported:
+    - .tar.gz
     """
     log.info(f"Autodetecting archive since no archive param provided in _service")
     cwd = Path.cwd()
@@ -143,7 +149,7 @@ def archive_autodetect():
 def extract(filename, outdir):
     log.info(f"Extracting {filename} to {outdir}")
 
-    cwd =  os.getcwd()
+    cwd = os.getcwd()
 
     # make path absolute so we can switch away from the current working directory
     filename = os.path.join(cwd, filename)
@@ -157,6 +163,7 @@ def extract(filename, outdir):
         log.error(archive_error)
 
     os.chdir(cwd)
+
 
 def find_file(path, filename):
     for root, dirs, files in os.walk(path):
@@ -215,11 +222,13 @@ def main():
 
         log.info(f"Vendor go.mod dependencies to {vendor_tarname}")
         vendor_tarfile = os.path.join(outdir, vendor_tarname)
-        cwd =  os.getcwd()
+        cwd = os.getcwd()
         os.chdir(go_mod_dir)
         vendor_dir = "vendor"
 
-        with libarchive.file_writer(vendor_tarfile, archive_format, archive_compression ) as new_archive:
+        with libarchive.file_writer(
+            vendor_tarfile, archive_format, archive_compression
+        ) as new_archive:
             new_archive.add_files(vendor_dir)
         os.chdir(cwd)
 
