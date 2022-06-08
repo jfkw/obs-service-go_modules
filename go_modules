@@ -211,7 +211,7 @@ def main():
         go_mod_dir = os.path.dirname(go_mod_path)
         log.info(f"Using go.mod found at {go_mod_path}")
     else:
-        log.info(f"File go.mod not found under {outdir}")
+        log.error(f"File go.mod not found under {outdir}")
         exit(1)
 
     if args.strategy == "vendor":
