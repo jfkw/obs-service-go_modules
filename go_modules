@@ -233,8 +233,19 @@ def main():
                 log.warning(
                     f"if go mod vendor and go mod verify complete, vendoring is successful"
                 )
-        cmd_go_mod("vendor", go_mod_dir)
-        cmd_go_mod("verify", go_mod_dir)
+            else:
+                log.error("go mod download failed")
+                exit(1)
+
+        cp = cmd_go_mod("vendor", go_mod_dir)
+        if cp.returncode:
+            log.error("go mod vendor failed")
+            exit(1)
+
+        cp = cmd_go_mod("verify", go_mod_dir)
+        if cp.returncode:
+            log.error("go mod verify failed")
+            exit(1)
 
         log.info(f"Vendor go.mod dependencies to {vendor_tarname}")
         vendor_tarfile = os.path.join(outdir, vendor_tarname)
