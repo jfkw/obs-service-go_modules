@@ -53,6 +53,36 @@ osc service disabledrun
 
 See [Example](#example) below for typical output with a complete `_service` file.
 
+## Compression format support
+
+`obs-service-go_modules` reads and writes compressed tar archives
+using [`libarchive`](https://libarchive.org/) via the Python3 `ctypes` wrapper
+[`python3-libarchive-c`](https://github.com/Changaco/python-libarchive-c).
+While `libarchive` supports numerous compression formats,
+`obs-service-go_modules` usage recommends limiting selections to
+`gz` (default), `xz` and `zstd`.
+Tables of representative compression method relative sizes and timings
+with Go vendored dependency sources (`vendor/`) are shown below.
+
+### Compression sizes with Go dependency sources
+
+| project    | version  | uncompressed | gz  | xz   | zstd |
+| ---------- | -------- | ------------ | --- | ---- | ---- |
+| hugo       | v0.100.2 | 75M          | 11M | 7.5M | 8.3M |
+| kubernetes | v1.24.1  | 129M         | 17M | 12M  | 14M  |
+
+### Compression timing with Go dependency sources
+
+| project    | version  | gz   | xz    | zstd |
+| ---------- | -------- | ---- | ----- | ---- |
+| hugo       | v0.100.2 | 1.8s |  6.3s | 0.3s |
+| kubernetes | v1.24.1  | 2.9s | 10.9s | 0.4s |
+
+The above are an average of five runs on Intel i7-6820HQ CPU.
+The `zstd` format has a clear advantage in speed with reasonable compression ratio,
+and is likely to become the default compression method in a future release.
+Decompression timings are closely matched among `gz`, `xz`, and `zstd` compression methods.
+
 ## Building Go applications with vendored dependency modules
 
 Go commands support building with vendored dependencies,
