@@ -11,6 +11,7 @@
 - [Example `_service` configuration](#example-_service-configuration)
 - [Transition note](#transition-note)
 - [openSUSE RPM packages built using `obs-service-go_modules`](#opensuse-rpm-packages-built-using-obs-service-go_modules)
+- [Dependencies](#dependencies)
 - [FAQ](#faq)
 - [Support](#support)
 - [Contributing](#contributing)
@@ -243,6 +244,18 @@ be committed along with the Go application release tarball.
 - [gohack](https://build.opensuse.org/package/show/devel:languages:go/gohack)
 - [mod](https://build.opensuse.org/package/show/devel:languages:go/mod)
 - [mgit](https://build.opensuse.org/package/show/devel:languages:go/mgit)
+
+## Dependencies
+
+`obs-service-go_modules` requires:
+
+- `python3`
+- `python-libarchive-c` ctypes wrapper for the `libarchive` C library (added in `v0.5.0`)
+
+The `libarchive` dependency was chosen to support a range of compression types
+including the `cpio_newc` used by `.obscpio` archives.
+The Python standard library only has support for gzipped tar archives,
+and support for other compression types was desirable.
 
 ## FAQ
 
