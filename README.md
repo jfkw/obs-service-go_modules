@@ -13,6 +13,7 @@
 - [openSUSE RPM packages built using `obs-service-go_modules`](#opensuse-rpm-packages-built-using-obs-service-go_modules)
 - [FAQ](#faq)
 - [Support](#support)
+- [Contributing](#contributing)
 - [License](#license)
 
 ## Overview
@@ -290,6 +291,16 @@ If you are packaging a Go application with an uncommon project layout or nonstan
 please file an [issue](https://github.com/openSUSE/obs-service-go_modules/issues) with description and reference the specific upstream tag or commit.
 While it may not be possible to support every unique upstream layout,
 a maintainer will evaluate feasibility of adding support for that special case or improve output messages to clearly indicate the error.
+
+## Contributing
+
+In keeping with [support](#support) objectives,
+feature ideas are welcome,
+particularly those that improve idiomatic OBS and RPM usage,
+packaging automation and commonality among Go application package sources.
+It is also a goal to keep manual configuration parameters in `_service` to a minimum for maintainability.
+Please file proposals as an [issue](https://github.com/openSUSE/obs-service-go_modules/issues)
+to discuss feasibility and feature design leading to a subsequent implementation via pull request.
 
 ## License
 
