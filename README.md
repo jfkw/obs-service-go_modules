@@ -83,6 +83,35 @@ The `zstd` format has a clear advantage in speed with reasonable compression rat
 and is likely to become the default compression method in a future release.
 Decompression timings are closely matched among `gz`, `xz`, and `zstd` compression methods.
 
+## OBS Source Service Build Mode support
+
+OBS Source Services can run in one of several modes as shown in
+[OBS Documentation: Using Source Services: Modes of Services](https://openbuildservice.org/help/manuals/obs-user-guide/cha.obs.source_service.html#sec.obs.sserv.mode).
+
+Currently the recommended mode is `disabled` (aliased as `manual`) which implies:
+
+- The service is run locally via explicit CLI call `osc service disabledrun`
+
+- `obs-service-go_modules` and its dependencies
+  `python3`, `libarchive` and `python3-libarchive-c`
+  are installed on the local machine.
+  In particular, `python3-libarchive-c` packages
+  are not available in all SUSE repositories at this time.
+
+- The resulting `vendor.tar.gz` or other supported compression type
+  should be committed and referenced as an RPM `Source:`.
+
+- `Source:` file names are as given in the RPM `.spec`, no `_service:` prefix is applied.
+
+If and when `obs-service-go_modules` is available on
+[OBS](https://build.opensuse.org),
+additional modes including `Default` will be supported.
+`Default` runs server side after each commit
+and locally before every local build.
+This will enable tighter integration with the
+[tar_scm / obs_scm](https://github.com/openSUSE/obs-service-tar_scm) source service,
+including uncommitted server-managed `.obscpio` source and vendor archives.
+
 ## Building Go applications with vendored dependency modules
 
 Go commands support building with vendored dependencies,
