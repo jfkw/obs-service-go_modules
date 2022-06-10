@@ -1,5 +1,22 @@
 # OBS Source Service `obs-service-go_modules`
 
+## Contents
+
+- [Overview](#overview)
+- [Usage for packagers](#usage-for-packagers)
+- [Compression format support](#compression-format-support)
+- [OBS Source Service Build Mode support](#obs-source-service-build-mode-support)
+- [Building Go applications with vendored dependency modules](#building-go-applications-with-vendored-dependency-modules)
+- [Example](#example)
+- [Example `_service` configuration](#example-_service-configuration)
+- [Transition note](#transition-note)
+- [openSUSE RPM packages built using `obs-service-go_modules`](#opensuse-rpm-packages-built-using-obs-service-go_modules)
+- [FAQ](#faq)
+- [Support](#support)
+- [License](#license)
+
+## Overview
+
 This is the git repository for
 [`devel:languages:go/obs-service-go_modules`](https://build.opensuse.org/package/show/devel:languages:go/obs-service-go_modules),
 an [Open Build Service (OBS)](https://build.opensuse.org)
