@@ -266,6 +266,14 @@ Running a private [Go proxy](https://proxy.golang.org) inside OBS could accompli
 as well as provide protections against third-party service outages and
 upstream Go modules being removed by the author.
 
+## Support
+
+`obs-service-go_modules` intends to be compatible with most upstream Go projects that use best practice source layouts and module conventions.
+If you are packaging a Go application with an uncommon project layout or nonstandard `go.mod` usage pattern that presents compatibility problems,
+please file an [issue](https://github.com/openSUSE/obs-service-go_modules/issues) with description and reference the specific upstream tag or commit.
+While it may not be possible to support every unique upstream layout,
+a maintainer will evaluate feasibility of adding support for that special case or improve output messages to clearly indicate the error.
+
 ## License
 
 GNU General Public License v2.0 or later
