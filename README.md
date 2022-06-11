@@ -252,10 +252,12 @@ be committed along with the Go application release tarball.
 - `python3`
 - `python-libarchive-c` ctypes wrapper for the `libarchive` C library (added in `v0.5.0`)
 
-The `libarchive` dependency was chosen to support a range of compression types
-including the `cpio_newc` used by `.obscpio` archives.
-The Python standard library only has support for gzipped tar archives,
-and support for other compression types was desirable.
+The Python standard library supports only gzipped tar archives.
+The `libarchive` dependency was chosen to support additional compression types
+including `xz` and the `cpio_newc` used by `.obscpio` archives.
+Supported compression types are intentionally limited to
+`gz`, `xz`, `zstd` and `cpio_newc` to preserve future flexibility
+in the event eliminating the `python-libarchive-c` dependency is desirable.
 
 ## FAQ
 
