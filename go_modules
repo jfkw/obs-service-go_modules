@@ -93,18 +93,20 @@ def basename_from_archive_name(archive_name):
         log.info(f"Detected basename {basename} form archive name")
     return basename
 
+
 def basename_from_archive(archive_name):
     paths = []
     with libarchive.file_reader(archive_name) as archive:
         for entry in archive:
-            if (entry.isdir):
+            if entry.isdir:
                 paths.append(entry.name)
         try:
             basename = os.path.commonpath(paths)
-        except  ValueError:
+        except ValueError:
             return
     log.info(f"Detected basename {basename} from archive")
     return basename
+
 
 def archive_autodetect():
     """Find the most likely candidate file that contains go.mod and go.sum.
@@ -200,12 +202,14 @@ def cmd_go_mod(cmd, dir):
         log.error(cp.stderr.strip())
     return cp
 
+
 def sanitize_subdir(dir, subdir):
     ret = os.path.normpath(subdir)
     if dir == os.path.commonpath([dir, ret]):
         return ret
     log.error("Invalid path: {ret} not subdir of {dir}")
-    exit (1)
+    exit(1)
+
 
 def main():
     log.info(f"Running OBS Source Service: {app_name}")
@@ -232,11 +236,19 @@ def main():
     with tempfile.TemporaryDirectory() as tempdir:
         extract(archive, tempdir)
 
-        basename = args.basename or basename_from_archive(archive) or basename_from_archive_name(archive)
+        basename = (
+            args.basename
+            or basename_from_archive(archive)
+            or basename_from_archive_name(archive)
+        )
         if subdir:
-            go_mod_path = sanitize_subdir(tempdir, os.path.join(tempdir, basename, subdir, "go.mod"))
+            go_mod_path = sanitize_subdir(
+                tempdir, os.path.join(tempdir, basename, subdir, "go.mod")
+            )
         else:
-            go_mod_path = sanitize_subdir(tempdir, os.path.join(tempdir, basename, "go.mod"))
+            go_mod_path = sanitize_subdir(
+                tempdir, os.path.join(tempdir, basename, "go.mod")
+            )
         if go_mod_path and os.path.exists(go_mod_path):
             go_mod_dir = os.path.dirname(go_mod_path)
             log.info(f"Using go.mod found at {go_mod_path}")
@@ -284,7 +296,7 @@ def main():
             vendor_dir = "vendor"
 
             with libarchive.file_writer(
-                    vendor_tarfile, archive_format, archive_compression
+                vendor_tarfile, archive_format, archive_compression
             ) as new_archive:
                 new_archive.add_files(vendor_dir)
             os.chdir(cwd)
