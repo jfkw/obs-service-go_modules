@@ -317,6 +317,11 @@ It is also a goal to keep manual configuration parameters in `_service` to a min
 Please file proposals as an [issue](https://github.com/openSUSE/obs-service-go_modules/issues)
 to discuss feasibility and feature design leading to a subsequent implementation via pull request.
 
+When creating a pull request,
+please enable the permission:
+"[Maintainers are allowed to edit this pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork#enabling-repository-maintainer-permissions-on-existing-pull-requests)"
+if it is not on by default.
+
 ## License
 
 GNU General Public License v2.0 or later
