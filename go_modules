@@ -71,8 +71,8 @@ def get_archive_parameters(args):
 
         if compression_format not in libarchive.ffi.READ_FILTERS:
             log.error(
-                'The specified compression mode is not supported:' +
-                f'"{args.compression}"'
+                "The specified compression mode is not supported:"
+                + f'"{args.compression}"'
             )
             exit(1)
 
@@ -118,9 +118,7 @@ def archive_autodetect():
     - .tar.xz
     - .tar.zstd
     """
-    log.info(
-        "Autodetecting archive since no archive param provided in _service"
-    )
+    log.info("Autodetecting archive since no archive param provided in _service")
     cwd = Path.cwd()
     # first .spec under cwd or None
     spec = next(reversed(sorted(Path(cwd).glob("*.spec"))), None)
@@ -165,8 +163,8 @@ def archive_autodetect():
         else:
             if not (version in archive.name):
                 log.warning(
-                    f"Version {version} in {spec.name} " +
-                    f"does not match {archive.name}"
+                    f"Version {version} in {spec.name} "
+                    + f"does not match {archive.name}"
                 )
     return str(archive.name)  # return string not PosixPath
 
@@ -221,8 +219,7 @@ def main():
     log.info(f"Running OBS Source Service: {app_name}")
 
     parser = argparse.ArgumentParser(
-        description=description,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        description=description, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("--strategy", default="vendor")
     parser.add_argument("--archive")
@@ -235,9 +232,7 @@ def main():
     outdir = args.outdir
     subdir = args.subdir
 
-    archive_format, archive_compression, archive_ext = get_archive_parameters(
-        args
-    )
+    archive_format, archive_compression, archive_ext = get_archive_parameters(args)
     vendor_tarname = f"vendor.{archive_ext}"
     archive = args.archive or archive_autodetect()
     log.info(f"Using archive {archive}")
@@ -263,8 +258,7 @@ def main():
             log.info(f"Using go.mod found at {go_mod_path}")
         else:
             log.error(
-                "File go.mod not found under " +
-                f"{os.path.join(tempdir, basename)}"
+                "File go.mod not found under " + f"{os.path.join(tempdir, basename)}"
             )
             exit(1)
 
@@ -284,12 +278,12 @@ def main():
             if cp.returncode:
                 if "invalid version" in cp.stderr:
                     log.warning(
-                        "go mod download is more sensitive to invalid " +
-                        "module versions than go mod vendor"
+                        "go mod download is more sensitive to invalid "
+                        + "module versions than go mod vendor"
                     )
                     log.warning(
-                        "if go mod vendor and go mod verify complete, " +
-                        "vendoring is successful"
+                        "if go mod vendor and go mod verify complete, "
+                        + "vendoring is successful"
                     )
                 else:
                     log.error("go mod download failed")
