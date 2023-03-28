@@ -70,7 +70,9 @@ def get_archive_parameters(args):
             compression_format = "zstd"
 
         if compression_format not in libarchive.ffi.READ_FILTERS:
-            log.error(f"The specified compression mode is not supported: {args.compression}")
+            log.error(
+                f"The specified compression mode is not supported: {args.compression}"
+            )
             exit(1)
 
         archive_format = "gnutar"
@@ -159,7 +161,9 @@ def archive_autodetect():
             log.warning(f"Version not found in {spec.name}")
         else:
             if not (version in archive.name):
-                log.warning(f"Version {version} in {spec.name} does not match {archive.name}")
+                log.warning(
+                    f"Version {version} in {spec.name} does not match {archive.name}"
+                )
     return str(archive.name)  # return string not PosixPath
 
 
