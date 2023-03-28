@@ -123,7 +123,7 @@ def archive_autodetect():
     log.info("Autodetecting archive since no archive param provided in _service")
     cwd = Path.cwd()
     # first .spec under cwd or None
-    spec = next(reversed(sorted(Path(cwd).glob("*.spec"))), None)
+    spec = next(sorted(Path(cwd).glob("*.spec"), reverse=True), None)
     if not spec:
         log.error(f"Archive autodetection found no spec file under {cwd}")
         exit(1)
