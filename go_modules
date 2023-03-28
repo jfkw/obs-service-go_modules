@@ -140,7 +140,7 @@ def archive_autodetect():
         )
         for pattern in patterns:
             log.debug(f"Trying to find archive name with pattern {pattern}")
-            archive = next(sorted(Path(spec_dir).glob(pattern)), reverse=True), None)
+            archive = next(sorted(Path(spec_dir).glob(pattern), reverse=True), None)
 
             if archive:
                 break
