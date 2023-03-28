@@ -191,7 +191,7 @@ def extract(filename, outdir):
     os.chdir(cwd)
 
 
-def cmd_go_mod(cmd, dir):
+def cmd_go_mod(cmd, moddir):
     """Execute go mod subcommand using subprocess.run().
     Capture both stderr and stdout as text.
     Log as info or error in this function body.
@@ -200,19 +200,19 @@ def cmd_go_mod(cmd, dir):
     log.info(f"go mod {cmd}")
     # subprocess.run() returns CompletedProcess cp
     if sys.version_info >= (3, 7):
-        cp = run(["go", "mod", cmd], cwd=dir, capture_output=True, text=True)
+        cp = run(["go", "mod", cmd], cwd=moddir, capture_output=True, text=True)
     else:
-        cp = run(["go", "mod", cmd], cwd=dir)
+        cp = run(["go", "mod", cmd], cwd=moddir)
     if cp.returncode:
         log.error(cp.stderr.strip())
     return cp
 
 
-def sanitize_subdir(dir, subdir):
+def sanitize_subdir(basedir, subdir):
     ret = os.path.normpath(subdir)
-    if dir == os.path.commonpath([dir, ret]):
+    if basedir == os.path.commonpath([basedir, ret]):
         return ret
-    log.error("Invalid path: {ret} not subdir of {dir}")
+    log.error("Invalid path: {ret} not subdir of {basedir}")
     exit(1)
 
 
