@@ -116,32 +116,29 @@ def archive_autodetect():
     - .tar.gz
     - .tar.lz
     - .tar.xz
-    - .tar.zstd
+    - .tar.zst
     """
     log.info("Autodetecting archive since no archive param provided in _service")
-    cwd = Path.cwd()
-    # first .spec under cwd or None
-    spec = next(sorted(Path(cwd).glob("*.spec"), reverse=True), None)
-    if not spec:
-        log.error(f"Archive autodetection found no spec file under {cwd}")
+    specs = sorted(Path.cwd().glob("*.spec"), reverse=True)
+    if not specs:
+        log.error(f"No spec file found in {Path.cwd()}")
         exit(1)
-    else:
-        archive = None
-        spec_dir = spec.parent  # typically the same as cwd
-        # highest sorted archive under spec_dir
-        c_exts = ("gz", "xz", "zstd", "lz", "bz2")
-        patterns = (
-            [f"{spec.stem}*.tar.{c_ext}" for c_ext in c_exts]
-            + [f"{spec.stem}*.obscpio"]
-            + [f"_service:*:{spec.stem}*tar.{c_ext}" for c_ext in c_exts]
-            + [f"_service:*:{spec.stem}*obscpio"]
-        )
-        for pattern in patterns:
-            log.debug(f"Trying to find archive name with pattern {pattern}")
-            archive = next(sorted(Path(spec_dir).glob(pattern), reverse=True), None)
 
-            if archive:
-                break
+    archive = None
+    spec = specs[0]
+    c_exts = ("gz", "xz", "zst", "lz", "bz2")
+    for pattern in (
+        [f"{spec.stem}*.tar.{c_ext}" for c_ext in c_exts]
+        + [f"{spec.stem}*.obscpio"]
+        + [f"_service:*:{spec.stem}*tar.{c_ext}" for c_ext in c_exts]
+        + [f"_service:*:{spec.stem}*obscpio"]
+    ):
+        log.debug(f"Trying to find archive name with pattern {pattern}")
+        matches = sorted(spec.parent.glob(pattern), reverse=True)
+
+        if matches:
+            archive = matches[0]
+            break
 
     if not archive:
         log.error("Archive autodetection found no matching archive")
