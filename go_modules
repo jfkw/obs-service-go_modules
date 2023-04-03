@@ -43,45 +43,42 @@ app_name = "obs-service-go_modules"
 description = __doc__
 
 DEFAULT_COMPRESSION = "gz"
-DEFAULT_VENDOR_FILENAME = "vendor.tar"
+DEFAULT_VENDOR_STEM = "vendor"
 
 
 def get_archive_parameters(args):
-    archive_format = None
-    archive_compression = None
-    archive_extension = None
 
+    archive = {}
+    archive["vendorname"] = args.vendorname
+    archive["compression"] = None
+    archive["level"] = None
     if args.compression == "obscpio" and "cpio" in libarchive.ffi.READ_FORMATS:
-        archive_format = "cpio_newc"
-        archive_compression = None
-        archive_extension = args.compression
+        archive["format"] = "cpio_newc"
+        archive["ext"] = "obscpio"
+        return archive
 
-    elif args.compression == "tar" and "tar" in libarchive.ffi.READ_FORMATS:
-        archive_format = "gnutar"
-        archive_compression = None
-        archive_extension = args.compression
+    archive["format"] = "gnutar"
+    if args.compression == "tar" and "tar" in libarchive.ffi.READ_FORMATS:
+        archive["ext"] = "tar"
+        return archive
 
+    archive["level"] = 9
+    if args.compression == "gz":
+        archive["compression"] = "gzip"
+    elif args.compression == "zst":
+        archive["compression"] = "zstd"
+        archive["level"] = 19
     else:
-        compression_format = args.compression
+        archive["compression"] = args.compression
 
-        if args.compression == "gz":
-            compression_format = "gzip"
+    if archive["compression"] not in libarchive.ffi.READ_FILTERS:
+        log.error(
+            f"The specified compression mode is not supported: {args.compression}"
+        )
+        exit(1)
 
-        elif args.compression == "zst":
-            compression_format = "zstd"
-
-        if compression_format not in libarchive.ffi.READ_FILTERS:
-            log.error(
-                f"The specified compression mode is not supported: {args.compression}"
-            )
-            exit(1)
-
-        archive_format = "gnutar"
-        archive_compression = compression_format
-        archive_extension = "tar." + (args.compression)
-        vendor_filename = args.vendorfilename
-
-    return archive_format, archive_compression, archive_extension, vendor_filename
+    archive["ext"] = "tar." + (args.compression)
+    return archive
 
 
 def basename_from_archive_name(archive_name):
@@ -222,17 +219,15 @@ def main():
     parser.add_argument("--outdir")
     parser.add_argument("--compression", default=DEFAULT_COMPRESSION)
     parser.add_argument("--basename")
-    parser.add_argument("--vendorfilename", default=DEFAULT_VENDOR_FILENAME)
+    parser.add_argument("--vendorname", default=DEFAULT_VENDOR_STEM)
     parser.add_argument("--subdir")
     args = parser.parse_args()
 
     outdir = args.outdir
     subdir = args.subdir
 
-    archive_format, archive_compression, archive_ext, vendor_filename = get_archive_parameters(
-        args
-    )
-    vendor_tarname = f"{vendor_filename}.{archive_ext}"
+    archive_args = get_archive_parameters(args)
+    vendor_tarname = f"{archive_args['vendorname']}.{archive_args['ext']}"
     archive = args.archive or archive_autodetect()
     log.info(f"Using archive {archive}")
 
@@ -298,8 +293,14 @@ def main():
             os.chdir(go_mod_dir)
             vendor_dir = "vendor"
 
+            kwargs = {}
+            if archive_args["level"]:
+                kwargs["options"] = f"compression-level={archive_args['level']}"
             with libarchive.file_writer(
-                vendor_tarfile, archive_format, archive_compression
+                vendor_tarfile,
+                archive_args["format"],
+                archive_args["compression"],
+                **kwargs,
             ) as new_archive:
                 new_archive.add_files(vendor_dir)
             os.chdir(cwd)
