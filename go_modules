@@ -47,7 +47,6 @@ DEFAULT_VENDOR_STEM = "vendor"
 
 
 def get_archive_parameters(args):
-
     archive = {}
     archive["vendorname"] = args.vendorname
     archive["compression"] = None
