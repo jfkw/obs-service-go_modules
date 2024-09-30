@@ -19,4 +19,16 @@
   <parameter name="vendorname">
     <description>Specify the name for the generated vendor tarball. Default: vendor</description>
   </parameter>
+  <parameter name="GOPRIVATE">
+    <description>Comma-separated list of glob patterns</description>
+  </parameter>
+  <parameter name="GODEBUG">
+    <description>Enable various debugging facilities. default="x509ignoreCN=0"</description>
+  </parameter>
+  <parameter name="GOCACHE">
+    <description>The directory where the go command will store cached information for reuse in future builds. default="/tmp/GOCACHE"</description>
+  </parameter>
+  <parameter name="GOPATH">
+    <description>The Go path is used to resolve import statements. default="/tmp/GOPATH"</description>
+  </parameter>
 </service>
