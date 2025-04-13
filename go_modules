@@ -250,7 +250,10 @@ def main():
 
     with tempfile.TemporaryDirectory() as tempdir:
         if os.path.isdir(archive):
-            shutil.copytree(archive, os.path.join(tempdir, archive))
+            # Preserve symlinks during copy, some Go tests test symlink loops
+            shutil.copytree(
+                src=archive, dst=os.path.join(tempdir, archive), symlinks=True
+            )
         else:
             extract(archive, tempdir)
 
