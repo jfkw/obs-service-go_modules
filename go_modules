@@ -193,7 +193,7 @@ def extract(filename, outdir):
     os.chdir(cwd)
 
 
-def cmd_go_mod(cmd, moddir):
+def cmd_go_mod(cmd, moddir, env):
     """Execute go mod subcommand using subprocess.run().
     Capture both stderr and stdout as text.
     Log as info or error in this function body.
@@ -202,9 +202,9 @@ def cmd_go_mod(cmd, moddir):
     log.info(f"go mod {cmd}")
     # subprocess.run() returns CompletedProcess cp
     if sys.version_info >= (3, 7):
-        cp = run(["go", "mod", cmd], cwd=moddir, capture_output=True, text=True)
+        cp = run(["go", "mod", cmd], cwd=moddir, capture_output=True, text=True, env=env)
     else:
-        cp = run(["go", "mod", cmd], cwd=moddir)
+        cp = run(["go", "mod", cmd], cwd=moddir, env=env)
     if cp.returncode:
         log.error(cp.stderr.strip())
     return cp
@@ -231,6 +231,10 @@ def main():
     parser.add_argument("--basename")
     parser.add_argument("--vendorname", default=DEFAULT_VENDOR_STEM)
     parser.add_argument("--subdir")
+    parser.add_argument("--GOPRIVATE", default=None)
+    parser.add_argument("--GODEBUG",   default="x509ignoreCN=0")
+    parser.add_argument("--GOCACHE",   default="/tmp/GOCACHE")
+    parser.add_argument("--GOPATH",    default="/tmp/GOPATH")
     args = parser.parse_args()
 
     outdir = args.outdir
@@ -285,9 +289,16 @@ def main():
             #   (also downloads but use separate steps for visibility in OBS environment)
             # - go mod verify
             #   (validates checksums)
+            
+            env=os.environ
+            if args.GOPRIVATE is not None:
+                env["GOPRIVATE"]=args.GOPRIVATE
+            env["GODEBUG"]=args.GODEBUG
+            env["GOCACHE"]=args.GOCACHE
+            env["GOPATH"]=args.GOPATH
 
             # return value cp is type subprocess.CompletedProcess
-            cp = cmd_go_mod("download", go_mod_dir)
+            cp = cmd_go_mod("download", go_mod_dir, env)
             if cp.returncode:
                 if "invalid version" in cp.stderr:
                     log.warning(
@@ -300,12 +311,12 @@ def main():
                     log.error("go mod download failed")
                     exit(1)
 
-            cp = cmd_go_mod("vendor", go_mod_dir)
+            cp = cmd_go_mod("vendor", go_mod_dir, env)
             if cp.returncode:
                 log.error("go mod vendor failed")
                 exit(1)
 
-            cp = cmd_go_mod("verify", go_mod_dir)
+            cp = cmd_go_mod("verify", go_mod_dir, env)
             if cp.returncode:
                 log.error("go mod verify failed")
                 exit(1)
