@@ -217,6 +217,7 @@ def sanitize_subdir(basedir, subdir):
     log.error(f"Invalid path: {ret} not subdir of {basedir}")
     exit(1)
 
+
 def main():
     log.info(f"Running OBS Source Service: {app_name}")
 
