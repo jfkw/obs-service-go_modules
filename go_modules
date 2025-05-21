@@ -135,11 +135,11 @@ def archive_autodetect():
     spec = specs[0]
     c_exts = ("gz", "xz", "zst", "lz", "bz2")
     for pattern in (
-        [spec.stem]
-        + [f"{spec.stem}*.tar.{c_ext}" for c_ext in c_exts]
+        [f"{spec.stem}*.tar.{c_ext}" for c_ext in c_exts]
         + [f"{spec.stem}*.obscpio"]
         + [f"_service:*:{spec.stem}*tar.{c_ext}" for c_ext in c_exts]
         + [f"_service:*:{spec.stem}*obscpio"]
+        + [spec.stem]
     ):
         log.debug(f"Trying to find archive name with pattern {pattern}")
         matches = sorted(spec.parent.glob(pattern), reverse=True)
